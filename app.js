@@ -66,6 +66,11 @@ app.put("/posts/:id", async (req, res) => {
     Post.save();
 
     res.redirect(`/posts/${Post.id}`);
+});
+
+app.delete("/posts/:id", async(req, res) => {
+    await post.findByIdAndRemove(req.params.id);;
+    res.redirect("/");
 
 });
 
