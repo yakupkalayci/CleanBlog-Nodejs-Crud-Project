@@ -4,7 +4,8 @@ const methodOverride = require("method-override");
 const path = require("path");
 const ejs = require("ejs");
 
-const post = require("./models/Post");
+const postController = require("./controllers/postControllers");
+const pageControllers = require("./controllers/pageControllers");
 
 const app = express();
 
@@ -23,56 +24,15 @@ app.use(methodOverride("_method", {
 app.set("view engine", "ejs");  
 
 //ROUTES
-app.get("/", async (req, res) => {
-    const posts = await post.find({});
-    res.render("index", {
-        posts
-    });
-});
+app.get("/", postController.getAllPosts);
+app.get("/posts/:id", postController.getPost);
+app.post("/blogPost", postController.createPost);
+app.put("/posts/:id", postController.updatePost);
+app.delete("/posts/:id", postController.deletePost);
 
-app.get("/posts/:id", async (req, res) => {
-    const Post = await post.findById(req.params.id);
-    res.render("post", {
-        Post
-    })
-});
-
-app.get("/about", (req, res) => {
-    res.render("about");
-});
-
-app.get("/add_post", (req, res) => {
-    res.render("add_post");
-});
-
-app.post("/blogPost", async (req, res) => {
-    await post.create(req.body);
-    res.redirect("/");
-});
-
-app.get("/posts/edit/:id", async(req, res) => {
-    const Post = await post.findById(req.params.id);
-    res.render("edit_post", {
-        Post
-    });
-});
-
-app.put("/posts/:id", async (req, res) => {
-    const Post = await post.findById(req.params.id);
-    Post.title = req.body.title;
-    Post.subTitle = req.body.subTitle;
-    Post.author = req.body.author;
-    Post.article = req.body.article;
-    Post.save();
-
-    res.redirect(`/posts/${Post.id}`);
-});
-
-app.delete("/posts/:id", async(req, res) => {
-    await post.findByIdAndRemove(req.params.id);;
-    res.redirect("/");
-
-});
+app.get("/about", pageControllers.getAboutPage);
+app.get("/add_post", pageControllers.getAboutPage);
+app.get("/posts/edit/:id", pageControllers.getEditPage);
 
 
 
