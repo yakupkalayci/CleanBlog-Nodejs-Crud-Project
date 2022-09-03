@@ -10,7 +10,9 @@ const pageControllers = require("./controllers/pageControllers");
 const app = express();
 
 // connect DB
-mongoose.connect("mongodb://localhost:/cleanblogDB");
+mongoose.connect('mongodb+srv://yakup:4tKK6MDI8wGKSdr3@cluster0.3p2wkqp.mongodb.net/?retryWrites=true&w=majority')
+    .then(() => console.log("DB Connected"))
+    .catch((err) => console.log(err));
 
 //MIDDLEWARES
 app.use(express.static("public"));
@@ -36,6 +38,6 @@ app.get("/posts/edit/:id", pageControllers.getEditPage);
 
 
 
-const port = 3000;
+const port = process.env.PORT || 5000;
 
 app.listen(3000, () => console.log(`Sunucu ${port} portunda çalıştı.`));
